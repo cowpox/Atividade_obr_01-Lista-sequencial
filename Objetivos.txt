@@ -109,6 +109,12 @@ a função que a chamar;
         }
     }
 
+    update: inclui mensagem de redimensionamento (tamanho antigo -> tamanho novo), antes 
+    de atualizar a variável maxLista.
+    printf("Redimensionamento com sucesso: %d -> %d\n", l->maxLista, novoTamanhoElem);
+
+
+
 7) Atualizar a ação condicional nas funções de inserção
 No lugar de:
     if(l->nroElem >= MAX) return false; // lista cheia
@@ -125,6 +131,9 @@ argumento para reduzir o tamanho pela metade.
   /* chama a função resize para reduzir a lista pela metade (arg -1),
   caso o número de elementos seja no máximo 25% da capacidade total*/
   if (l->nroElem <= 0.25 * l->maxLista) resize(l, -1);
+Agora, sempre que o número de elementos atingir 25% ou menos da capacidade total, ocorre
+o redimensionamento automático para metade da capacidade (segundo objetivo específico
+cumprido - reduzir capacidade)
 
 9) Criar uma função de visualização detalhada da lista, para
 facilitar os testes e demonstrações.
@@ -150,9 +159,52 @@ Tamanho total em bytes (soma dos dois anteriores).
         printf("-----------------------------------------\n");
     } /* exibirListaDetalhada */
 
+    update: adicionei um mostrador porcentual do número de elementos,
+    para facilitar a visualização de quando ocorrerá o redimensionamento (25 e 100%)
+        printf("Elementos (validos/máximo): %i/%d (%.1f%%)\n", tamanho(l),
+           tamanhoEmElementos(l),
+           100 * (float)tamanho(l) / tamanhoEmElementos(l));
 
-testar o segundo objetivo
+10) Automatizar, em ClienteOrdenadaDin.c, a inclusão e exclusão de elementos,
+bem como a exibição da lista e seus detalhes. Ao utilizar um contador até (2 * MAX + 1),
+é possível verificar 2 x o redimensionamento para cima.
+    int main() {
+        LISTA lista;
+        REGISTRO reg;
+
+        // Inicializar a lista
+        inicializarLista(&lista);
+
+        // Exibir lista vazia
+        printf("Lista vazia\n");
+        exibirListaDetalhada(&lista);
+        printf("\n");
+
+        // Inserir elementos na lista.
+        // Cada elemento será igual 2 x seu índice
+        printf("Adicionando elementos\n");
+        for (int i = 0; i < (2 * MAX + 1); i++) {
+            reg.chave = 2 * i;
+            inserirElemListaOrd(&lista, reg);
+            exibirListaDetalhada(&lista);
+        }
+        printf("\n");
+
+        // Remover elementos a partir do início
+        printf("Excluindo elementos\n");
+        for (int i = 0; i < (2 * MAX + 1); i++) {
+            if (excluirElemLista(&lista, 2 * i))
+                printf("Exclusao bem sucedida: %d.\n", 2 * i);
+            exibirListaDetalhada(&lista);
+        }
+        printf("\n");
+
+        return 0;
+    }
+
+
+
 resetar o max para 50 (como proposto)
-criar script para preencher as posicoes iniciais (50 primeiras)
+
 realizar mais testes
 redigir o md 

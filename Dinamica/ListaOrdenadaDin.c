@@ -72,11 +72,13 @@ void exibirListaDetalhada(LISTA* l) {
     for (i = 0; i < l->nroElem; i++) printf("%i ", l->A[i].chave);
     printf("\"\n");
     printf("-----------------------------------------\n");
-    printf("Elementos (validos/máximo): %i/%d\n", tamanho(l),tamanhoEmElementos(l));
+    printf("Elementos (validos/máximo): %i/%d (%.1f%%)\n", tamanho(l),
+           tamanhoEmElementos(l),
+           100 * (float)tamanho(l) / tamanhoEmElementos(l));
     printf("Bytes (array/lista/total): %i/%i/%i\n",
            calculaTamanhoEmBytes(tamanhoEmElementos(l)), tamanhoEmBytes(l),
            calculaTamanhoEmBytes(tamanhoEmElementos(l)) + tamanhoEmBytes(l));
-    printf("-----------------------------------------\n");
+    printf("-----------------------------------------\n\n");
 } /* exibirListaDetalhada */
 
 /* Retornar a chave do primeiro elemento da lista sequencial (caso haja) e ERRO
@@ -164,6 +166,7 @@ void resize(LISTA* l, int operacao) {
             printf("Erro ao redimensionar o array.\n");
             return;
         }
+        printf("Redimensionamento com sucesso: %d -> %d\n", l->maxLista, novoTamanhoElem);
         l->A = novoArray;        // Atualiza o ponteiro para o novo array
         l->maxLista = novoTamanhoElem; // Atualiza a capacidade máxima
     } else if (operacao == -1){
@@ -173,6 +176,7 @@ void resize(LISTA* l, int operacao) {
             printf("Erro ao redimensionar o array.\n");
             return;
         }
+        printf("Redimensionamento com sucesso: %d -> %d\n", l->maxLista, novoTamanhoElem);
         l->A = novoArray;        // Atualiza o ponteiro para o novo array
         l->maxLista = novoTamanhoElem; // Atualiza a capacidade máxima
     } else {
