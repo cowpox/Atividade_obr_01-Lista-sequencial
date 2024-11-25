@@ -1,0 +1,22 @@
+# Arquivos de compilação
+*.o
+*.out
+*.exe
+*.a
+*.so
+
+# Diretórios gerados
+/bin/
+/build/
+/dist/
+
+# Arquivos de sistema
+*.log
+*.tmp
+*.swp
+*.bak
+Thumbs.db
+.DS_Store
+
+# Diretórios do Visual Studio Code
+.vscode/
