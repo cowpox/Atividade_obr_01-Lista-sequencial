@@ -1,8 +1,10 @@
-// listaSequencialOrdenada.h
+// listaSequencialOrdenadaDin.h
 #ifndef LISTA_SEQUENCIAL_ORDENADA_H
 #define LISTA_SEQUENCIAL_ORDENADA_H
 
 #include <stdio.h>
+#include <stdlib.h>
+
 #define MAX 50
 #define ERRO -1
 #define bool int
@@ -17,8 +19,9 @@ typedef struct {
 } REGISTRO;
 
 typedef struct {
-  REGISTRO A[MAX+1];
-  int nroElem;
+    REGISTRO* A;   // Ponteiro para o array dinâmico
+    int nroElem;   // Número de elementos atualmente armazenados
+    int maxLista;  // Capacidade máxima da lista
 } LISTA;
 
 // Declaração das funções
@@ -38,5 +41,11 @@ bool excluirElemLista(LISTA* l, TIPOCHAVE ch);
 bool excluirElemListaOrd(LISTA* l, TIPOCHAVE ch);
 bool inserirElemListaOrd(LISTA* l, REGISTRO reg);
 bool inserirElemListaOrdSemDup(LISTA* l, REGISTRO reg);
+// Declaração das funções que criei
+void exibirListaDetalhada(LISTA* l);
+void resize(LISTA* l, int operacao);
+int calculaTamanhoEmBytes(int nroElem);
+int tamanhoEmElementos(LISTA* l);
+
 
 #endif // LISTA_SEQUENCIAL_ORDENADA_H
