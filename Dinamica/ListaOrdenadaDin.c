@@ -23,14 +23,7 @@ void inicializarLista(LISTA* l) {
 
 
 
-/* Exibição da lista sequencial */
-void exibirLista(LISTA* l){
-  int i;
-  printf("Lista: \" ");
-  for (i=0; i < l->nroElem; i++)
-    printf("%i ", l->A[i].chave);
-  printf("\"\n");
-} /* exibirLista */ 
+
 
 /* Retornar o tamanho da lista (numero de elementos "validos") */
 int tamanho(LISTA* l) {
@@ -44,42 +37,47 @@ int tamanho(LISTA* l) {
 */
 
 int tamanhoEmBytes(LISTA* l) {
-    return sizeof(LISTA) + ((l->maxLista + 1) * sizeof(REGISTRO));
+    return sizeof(LISTA);
 } /* tamanhoEmBytes */
 
-/* Retornar o tamanho da lista em elementos, ou seja, sua capacidade.
-Do tamanho em bytes, devemos descontar outras elementos da estrutura
-além do registro, e o último elemento do registro (o sentinela)*/
-// int tamanhoEmElementos(LISTA* L){
-//   int bytesLista = sizeof(LISTA);
-//   int bytesRegistro = sizeof(REGISTRO);
-//   int bytesNroElem = sizeof(int);
-//   int bytesMaxLista = sizeof(int);
-//   int nroElemTotais = (bytesLista - (bytesNroElem + bytesMaxLista)) / bytesRegistro;
-//   return nroElemTotais - 1;
-// }
 
 /* Retornar o tamanho da lista em elementos, ou seja, sua capacidade*/
 int tamanhoEmElementos(LISTA* l){
   return l->maxLista;
 }
 
-/* Calcula o tamanho em bytes da lista para conter x elementos.
-No cálculo, já considera o elemento sentinela (x + 1)
-Este valor será usado para redimensionar a lista*/
-// int calculaTamanhoEmBytes(int nroElem) {
-//     //+1 => considerar o sentinela
-//     int bytesRegistro = (nroElem + 1) * sizeof(REGISTRO);
-//     int bytesNroElem = sizeof(int);
-//     int bytesMaxLista = sizeof(int);
-//     int bytesPonteiro = sizeof(REGISTRO*);
-//     return (bytesRegistro + bytesNroElem + bytesMaxLista + bytesPonteiro);
-// }
 
 int calculaTamanhoEmBytes(int nroElem) {
         //+1 => considerar o sentinela
         return (nroElem + 1) * sizeof(REGISTRO);
 }
+
+
+/* Exibição da lista sequencial */
+void exibirLista(LISTA* l){
+  int i;
+  printf("Lista: \" ");
+  for (i=0; i < l->nroElem; i++)
+    printf("%i ", l->A[i].chave);
+  printf("\"\n");
+} /* exibirLista */ 
+
+
+
+/* Exibição da lista sequencial com detalhes */
+void exibirListaDetalhada(LISTA* l) {
+    int i;
+    printf("*****************************************\n");
+    printf("Lista: \" ");
+    for (i = 0; i < l->nroElem; i++) printf("%i ", l->A[i].chave);
+    printf("\"\n");
+    printf("-----------------------------------------\n");
+    printf("Elementos (validos/máximo): %i/%d\n", tamanho(l),tamanhoEmElementos(l));
+    printf("Bytes (array/lista/total): %i/%i/%i\n",
+           calculaTamanhoEmBytes(tamanhoEmElementos(l)), tamanhoEmBytes(l),
+           calculaTamanhoEmBytes(tamanhoEmElementos(l)) + tamanhoEmBytes(l));
+    printf("-----------------------------------------\n");
+} /* exibirListaDetalhada */
 
 /* Retornar a chave do primeiro elemento da lista sequencial (caso haja) e ERRO
    caso a lista esteja vazia */
@@ -155,30 +153,6 @@ int buscaBinaria(LISTA* l, TIPOCHAVE ch){
 } /* buscaBinaria */
 
 
-/* Exclusão do elemento cuja chave seja igual a ch */
-bool excluirElemLista(LISTA* l, TIPOCHAVE ch) { 
-  int pos, j;
-  pos = buscaSequencial(l,ch);
-  if(pos == ERRO) return false; // não existe
-  for(j = pos; j < l->nroElem-1; j++) l->A[j] = l->A[j+1];
-  l->nroElem--;
-  return true;
-} /* excluirElemLista */
-
-
-/* Exclusão do elemento cuja chave seja igual a ch em lista ordenada*/
-bool excluirElemListaOrd(LISTA* l, TIPOCHAVE ch) { 
-  int pos, j;
-  pos = buscaBinaria(l,ch);
-  if(pos == ERRO) return false; // não existe
-  for(j = pos; j < l->nroElem-1; j++) l->A[j] = l->A[j+1];
-  l->nroElem--;
-  return true;
-} /* excluirElemListaOrd */
-
-
-
-
 /* Redimensionamento da lista
 se operacao = 1 => dobra
 se operacao = -1 => reduz pela metade */
@@ -205,6 +179,38 @@ void resize(LISTA* l, int operacao) {
       printf("Operação inválida. Use 1 para aumentar ou -1 para reduzir a capacidade.\n");
     }
 }
+
+
+/* Exclusão do elemento cuja chave seja igual a ch */
+bool excluirElemLista(LISTA* l, TIPOCHAVE ch) { 
+  int pos, j;
+  pos = buscaSequencial(l,ch);
+  if(pos == ERRO) return false; // não existe
+  for(j = pos; j < l->nroElem-1; j++) l->A[j] = l->A[j+1];
+  l->nroElem--;
+  /* chama a função resize para reduzir a lista pela metade (arg -1),
+  caso o número de elementos seja no máximo 25% da capacidade total*/
+  if (l->nroElem <= 0.25 * l->maxLista) resize(l, -1);
+  return true;
+} /* excluirElemLista */
+
+
+/* Exclusão do elemento cuja chave seja igual a ch em lista ordenada*/
+bool excluirElemListaOrd(LISTA* l, TIPOCHAVE ch) { 
+  int pos, j;
+  pos = buscaBinaria(l,ch);
+  if(pos == ERRO) return false; // não existe
+  for (j = pos; j < l->nroElem - 1; j++) l->A[j] = l->A[j + 1];
+  l->nroElem--;
+  /* chama a função resize para reduzir a lista pela metade (arg -1),
+  caso o número de elementos seja no máximo 25% da capacidade total*/
+  if (l->nroElem <= 0.25 * l->maxLista) resize(l, -1);
+  return true;
+} /* excluirElemListaOrd */
+
+
+
+
 
 /* Inserção em lista ordenada usando busca binária permitindo duplicação */
 bool inserirElemListaOrd(LISTA* l, REGISTRO reg) {
