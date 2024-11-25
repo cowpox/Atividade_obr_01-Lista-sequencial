@@ -56,7 +56,15 @@ Adicionei a redefinição da variável maxLista para o valor MAX proposto inialm
 só retornaria o tamanho do ponteiro REGISTRO (e não o tamanho do array)
     int tamanhoEmBytes(LISTA* l) {
         return sizeof(LISTA) + ((l->maxLista + 1) * sizeof(REGISTRO));
-    }   
+    }
+
+    update: retornei a função para o original, pois o tamanho da lista
+    deve incluir apenas o tamanho de seus membros (e não do array para
+    o qual o ponteiro aponta)
+
+    int tamanhoEmBytes(LISTA* l) {
+        return sizeof(LISTA);
+    } /* tamanhoEmBytes */ 
 
 4) Criar uma função para exibir a capacidade máxima da lista em elementos
 (não leva em conta o sentinela)
@@ -101,27 +109,50 @@ a função que a chamar;
         }
     }
 
-7) Atualizada a ação condicional nas funções de inserção
+7) Atualizar a ação condicional nas funções de inserção
 No lugar de:
     if(l->nroElem >= MAX) return false; // lista cheia
 Colacado:
     if(l->nroElem >= l->maxLista) resize (l,1); /*chama a função de redimensionamento
   com o parâmetro 1 (duplicação) */
 Agora, sempre que atingir a capacidade máxima, ocorre o redimensionamento automático
-para o dobro da capacidade (primeiro objetivo específicos - aumentar capacidade)
+para o dobro da capacidade (primeiro objetivo específico cumprido - aumentar capacidade)
+
+8) Incluir verificação condicional ao final das funções de exclusão.
+Sempre que o número de elementos válidos for menor ou igual a 25%
+da capacidade total, ocorre a chamada de redimensionamento com o
+argumento para reduzir o tamanho pela metade.
+  /* chama a função resize para reduzir a lista pela metade (arg -1),
+  caso o número de elementos seja no máximo 25% da capacidade total*/
+  if (l->nroElem <= 0.25 * l->maxLista) resize(l, -1);
+
+9) Criar uma função de visualização detalhada da lista, para
+facilitar os testes e demonstrações.
+Exibe os elementos da lista;
+Número de elementos válidos / capacidade total da lista;
+Tamanho em bytes do array que guarda os elementos da lista,
+de acordo com a fórmula: (numElem + 1) * 4, pois inclui um
+espaço a mais para o elemento sentinela;
+Tamanho em bytes da lista: 8 bytes para o ponteiro do array,
+4 bytes para cada variável (nroElem e maxLista);
+Tamanho total em bytes (soma dos dois anteriores).
+    void exibirListaDetalhada(LISTA* l) {
+        int i;
+        printf("*****************************************\n");
+        printf("Lista: \" ");
+        for (i = 0; i < l->nroElem; i++) printf("%i ", l->A[i].chave);
+        printf("\"\n");
+        printf("-----------------------------------------\n");
+        printf("Elementos (validos/máximo): %i/%d\n", tamanho(l),tamanhoEmElementos(l));
+        printf("Bytes (array/lista/total): %i/%i/%i\n",
+            calculaTamanhoEmBytes(tamanhoEmElementos(l)), tamanhoEmBytes(l),
+            calculaTamanhoEmBytes(tamanhoEmElementos(l)) + tamanhoEmBytes(l));
+        printf("-----------------------------------------\n");
+    } /* exibirListaDetalhada */
 
 
-
-
-
-
-4) Criar uma função para calcular o tamanho da lista em bytes necessários
-para conter x elementos. Esse valor será usado na função de redimensionamento
-
-    int calculaTamanhoEmBytes(int nroElem) {
-        //+1 => considerar o sentinela
-        int bytesRegistro = (nroElem + 1) * sizeof(REGISTRO);
-        int bytesNroElem = sizeof(int);
-        int bytesMaxLista = sizeof(int);
-        return (bytesRegistro + bytesNroElem + bytesMaxLista);
-}
+testar o segundo objetivo
+resetar o max para 50 (como proposto)
+criar script para preencher as posicoes iniciais (50 primeiras)
+realizar mais testes
+redigir o md 
