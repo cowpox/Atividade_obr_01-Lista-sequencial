@@ -202,9 +202,8 @@ bem como a exibição da lista e seus detalhes. Ao utilizar um contador até (2 
         return 0;
     }
 
+11) Testes realizados com o MAX inicial de 1, 2, 4, 10 e 50 (como proposto).
+Todos com sucesso no redimensinamento para cima e para baixo, de acordo
+com os critérios estabelecidos.
 
-
-resetar o max para 50 (como proposto)
-
-realizar mais testes
 redigir o md 
