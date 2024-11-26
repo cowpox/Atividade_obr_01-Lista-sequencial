@@ -46,6 +46,7 @@ void exibirListaDetalhada(LISTA* l);
 void resize(LISTA* l, int operacao);
 int calculaTamanhoEmBytes(int nroElem);
 int tamanhoEmElementos(LISTA* l);
+void liberarLista(LISTA* l);
 
 
 #endif // LISTA_SEQUENCIAL_ORDENADA_H

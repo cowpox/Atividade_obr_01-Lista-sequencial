@@ -249,4 +249,13 @@ bool inserirElemListaOrdSemDup(LISTA* l, REGISTRO reg) {
   return true;
 } /* inserirElemListaOrd */
 
+/* Liberar a memória e apontar o ponteiro para NULL*/
+void liberarLista(LISTA* l) {
+    if (l->A != NULL) { // Verifica se há memória alocada
+        free(l->A);      // Libera a memória alocada
+        l->A = NULL;     // Evita ponteiros pendentes
+    }
+    l->nroElem = 0;
+    l->maxLista = 0;
+}
 

@@ -32,5 +32,8 @@ int main() {
     }
     printf("\n");
 
+    liberarLista(&lista);
+    printf("Memória liberada com sucesso.\n");
+
     return 0;
 }

@@ -206,13 +206,25 @@ bem como a exibição da lista e seus detalhes. Ao utilizar um contador até (2 
 Todos com sucesso no redimensinamento para cima e para baixo, de acordo
 com os critérios estabelecidos.
 
-12) Declarar funções no arquivo header
+12) Criar função para liberar a memória da lista e apontar o ponteiro para NULL.
+A função será chamada ao final de main().
+    void liberarLista(LISTA* l) {
+        if (l->A != NULL) { // Verifica se há memória alocada
+            free(l->A);      // Libera a memória alocada
+            l->A = NULL;     // Evita ponteiros pendentes
+        }
+        l->nroElem = 0;
+        l->maxLista = 0;
+    }
+
+13) Declarar funções no arquivo header
     void exibirListaDetalhada(LISTA* l);
     void resize(LISTA* l, int operacao);
     int calculaTamanhoEmBytes(int nroElem);
     int tamanhoEmElementos(LISTA* l);
+    void liberarLista(LISTA* l);
 
-13) Organizar a estrutura dos arquivos
+14) Organizar a estrutura dos arquivos
 ProjetoListaSequencial/
 ├── README.md              # Explicação do projeto
 ├── src/                   # Código-fonte principal
@@ -220,11 +232,8 @@ ProjetoListaSequencial/
 │   ├── ClienteOrdenadaDin.c
 ├── include/               # Arquivos de cabeçalho
 │   ├── ListaOrdenadaDin.h
-├── tests/                 # Testes unitários e exemplos de uso (se aplicável)
-│   ├── test_lista.c
 ├── docs/                  # Documentação adicional (se aplicável)
 │   ├── Atividade_Lista_Sequencial.pdf
-├── Makefile               # Arquivo para build e execução (se usado)
 └── .gitignore             # Para ignorar arquivos desnecessários no repositório
 
 
